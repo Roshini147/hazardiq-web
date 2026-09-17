@@ -1,0 +1,2 @@
+import {ResponsiveContainer,BarChart,Bar,XAxis,YAxis,Tooltip} from 'recharts';
+export default function RiskChart({risks}:{risks:any[]}){const levels=['SAFE / MINIMAL','LOW','MODERATE','HIGH','CRITICAL'];const data=levels.map(level=>({level,count:risks.filter(r=>r.level===level).length}));return <div className="chart"><ResponsiveContainer width="100%" height={240}><BarChart data={data}><XAxis dataKey="level" tick={{fontSize:10}}/><YAxis allowDecimals={false} tick={{fontSize:10}}/><Tooltip/><Bar dataKey="count"/></BarChart></ResponsiveContainer></div>}
