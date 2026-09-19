@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+import { StaticChennaiMap } from '../components/StaticChennaiMap';
+import { RedZonePanel } from '../components/RedZonePanel';
+import { RiskZone } from '../data/hazards';
 import {
   MapPin,
   Building2,
@@ -17,7 +20,20 @@ import {
 } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
-  const { t, language, lowBandwidth } = useApp();
+  const { t, language, lowBandwidth, zones, selectedZone, setSelectedZone } = useApp();
+  const [activeZone, setActiveZone] = useState<RiskZone | null>(selectedZone || zones[0] || null);
+
+  const handleFeatureSelect = (feature: any) => {
+    if (feature.type === 'RISK_AREA') {
+      const match = zones.find(z => z.code === feature.data.code || z.id === feature.data.id);
+      if (match) {
+        setActiveZone(match);
+        setSelectedZone(match);
+      } else {
+        setActiveZone(feature.data);
+      }
+    }
+  };
 
   return (
     <div className="space-y-12 pb-16">
@@ -140,6 +156,63 @@ export const HomePage: React.FC = () => {
                 </Link>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Overview & Chennai Multi-Hazard GIS Risk Map */}
+      <section className="max-w-7xl mx-auto px-4 space-y-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 pb-3">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-red-600 text-white uppercase">
+                {language === 'ta' ? 'அதிகாரப்பூர்வ புவிசார் பேரிடர் வரைபடம்' : 'OPERATIONAL GIS RISK INTELLIGENCE'}
+              </span>
+              <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                {language === 'ta' ? 'நேரலை நிலவரம்' : 'LIVE CHENNAI OVERVIEW'}
+              </span>
+            </div>
+            <h2 className="text-2xl font-black text-slate-900">
+              {language === 'ta' ? 'சென்னை புவிசார் பேரிடர் வரைபடம் & பகுதி பகுப்பாய்வு' : 'Overview & Chennai Multi-Hazard GIS Risk Map'}
+            </h2>
+            <p className="text-xs text-slate-500">
+              {language === 'ta'
+                ? 'அபாய மண்டலங்கள், பாதுகாப்பான முகாம்கள் மற்றும் வெளியேற்றப் பாதைகளை நேரடியாக வரைபடத்தில் கிளிக் செய்து ஆராயவும்.'
+                : 'Interactive tactical GIS map: Click any hazard zone polygon, designated safe shelter, or evacuation corridor.'}
+            </p>
+          </div>
+          <Link
+            to="/risk-map"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-sm transition-colors"
+          >
+            <span>{language === 'ta' ? 'முழுத்திரை வரைபடம்' : 'Launch Full Screen Map'}</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div className="lg:col-span-8 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+            <StaticChennaiMap
+              selectedZoneId={activeZone?.id || activeZone?.code}
+              onSelectFeature={handleFeatureSelect}
+            />
+          </div>
+          <div className="lg:col-span-4 space-y-4">
+            {activeZone ? (
+              <RedZonePanel zone={activeZone} onClose={() => setActiveZone(null)} />
+            ) : (
+              <div className="bg-white rounded-xl border border-slate-200 p-6 text-center space-y-2 text-xs text-slate-500">
+                <MapPin className="h-8 w-8 text-slate-400 mx-auto" />
+                <p className="font-bold text-slate-800">
+                  {language === 'ta' ? 'வரைபடத்தில் ஒரு பகுதியைத் தேர்ந்தெடுக்கவும்' : 'Select a Hazard Zone on the Map'}
+                </p>
+                <p>
+                  {language === 'ta'
+                    ? 'விவரங்களை இங்கே காண வரைபடத்தில் உள்ள சிவப்பு மண்டலத்தை கிளிக் செய்யவும்.'
+                    : 'Click any red or high-risk zone polygon to view its risk score, population at risk, and evacuation plan.'}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>

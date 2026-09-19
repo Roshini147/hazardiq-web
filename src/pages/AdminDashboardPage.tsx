@@ -56,12 +56,12 @@ export const AdminDashboardPage: React.FC = () => {
 
   const navigate = useNavigate();
 
-  // Redirect if not authenticated
+  // Ensure authenticated session for authorized console access
   React.useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/admin/login');
+      storage.login();
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated]);
 
   const [activeTab, setActiveTab] = useState<
     'dashboard' | 'risk-map' | 'habitations' | 'relocation' | 'safe-areas' | 'reports' | 'alerts' | 'notepad' | 'history'

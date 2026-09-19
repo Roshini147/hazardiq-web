@@ -4,7 +4,7 @@ import { ShieldCheck, Lock, PhoneCall, Building2, MapPin } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 export const Footer: React.FC = () => {
-  const { t, language } = useApp();
+  const { t, language, isAuthenticated } = useApp();
 
   return (
     <footer className="bg-slate-950 text-slate-400 border-t border-slate-800 mt-auto">
@@ -130,15 +130,19 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar with discrete Admin Login Link */}
         <div className="border-t border-slate-900 pt-4 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-3">
           <p>© 2026 HAZARDIQ — Greater Chennai Disaster Management Platform. All Rights Reserved.</p>
-          <div className="flex items-center gap-4">
-            <span className="text-slate-400 font-mono">Greater Chennai Metropolitan Region</span>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-slate-400 font-mono hidden sm:inline">Greater Chennai Metropolitan Region</span>
             <Link
-              to="/admin/login"
-              className="inline-flex items-center gap-1 text-slate-400 hover:text-slate-200 transition-colors py-1 px-2 rounded hover:bg-slate-900 border border-slate-800"
+              to={isAuthenticated ? '/admin/dashboard' : '/admin/login'}
+              className="inline-flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 transition-colors py-1.5 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 border border-emerald-800/60 font-bold shadow-xs"
               title="Official Access Portal"
             >
-              <Lock className="h-3 w-3 text-emerald-400" />
-              <span>{language === 'ta' ? 'அதிகாரப்பூர்வ உள்நுழைவு' : 'Authorized Official Login'}</span>
+              <Lock className="h-3.5 w-3.5 text-emerald-400" />
+              <span>
+                {isAuthenticated
+                  ? (language === 'ta' ? 'கட்டுப்பாட்டு தளம் திறக்க →' : 'Open Admin Console →')
+                  : (language === 'ta' ? 'அதிகாரப்பூர்வ உள்நுழைவு' : 'Authorized Official Login')}
+              </span>
             </Link>
           </div>
         </div>

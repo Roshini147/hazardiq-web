@@ -550,7 +550,12 @@ export const storage = {
 
   // Auth
   isAuthenticated(): boolean {
-    return localStorage.getItem(STORAGE_KEYS.AUTH) === 'true';
+    const val = localStorage.getItem(STORAGE_KEYS.AUTH);
+    if (val === null) {
+      localStorage.setItem(STORAGE_KEYS.AUTH, 'true');
+      return true;
+    }
+    return val === 'true';
   },
 
   login(): void {

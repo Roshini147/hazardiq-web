@@ -17,6 +17,8 @@ import {
   Building2,
   Users,
   Compass,
+  Lock,
+  ShieldCheck,
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -32,6 +34,12 @@ export const Header: React.FC = () => {
     { to: '/alerts', label: t.navAlerts, icon: AlertTriangle, badge: 'Live' },
     { to: '/report', label: t.navReport, icon: FileText },
     { to: '/how-it-works', label: t.navHowItWorks, icon: HelpCircle },
+    {
+      to: isAuthenticated ? '/admin/dashboard' : '/admin/login',
+      label: language === 'ta' ? 'அரசு தளம்' : 'Admin Console',
+      icon: ShieldCheck,
+      badge: 'Gov'
+    },
   ];
 
   const isActive = (path: string) => {
@@ -77,14 +85,23 @@ export const Header: React.FC = () => {
               <span>{language === 'en' ? 'தமிழ் (TA)' : 'English (EN)'}</span>
             </button>
 
-            {/* Authenticated Admin Quick Link */}
-            {isAuthenticated && (
+            {/* Authenticated / Guest Admin Link */}
+            {isAuthenticated ? (
               <Link
                 to="/admin/dashboard"
-                className="flex items-center gap-1 text-emerald-400 hover:text-emerald-300 font-semibold"
+                className="flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 font-bold bg-emerald-950/60 px-2.5 py-0.5 rounded border border-emerald-700/60"
               >
-                <UserCheck className="h-3 w-3" />
-                <span>Console</span>
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                <span>{language === 'ta' ? 'அதிகாரி தளம்' : 'Admin Console'}</span>
+              </Link>
+            ) : (
+              <Link
+                to="/admin/login"
+                className="flex items-center gap-1 text-slate-300 hover:text-emerald-400 px-2 py-0.5 rounded hover:bg-slate-800 transition-colors"
+                title="Official Government Login"
+              >
+                <Lock className="h-3 w-3 text-emerald-400" />
+                <span>{language === 'ta' ? 'அதிகாரி உள்நுழைவு' : 'Official Login'}</span>
               </Link>
             )}
           </div>
