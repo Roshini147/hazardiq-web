@@ -4,7 +4,7 @@
 > **Problem Statement ID:** SIH26191  
 > **Problem Statement:** *Intelligent Identification of Hazard-Based Red Zones, Carrying Capacity Assessment, and Immediate Relocation Needs for Vulnerable Habitations*  
 > **Theme:** Disaster Management | **Category:** Software  
-> **Team:** Tech Titans | **Institution:** J.N.N Institute of Engineering  
+> **Team:**  JNN Tech Titans | **Institution:** J.N.N Institute of Engineering  
 
 ---
 
@@ -23,10 +23,8 @@ $$\mathbf{HAZARD} \longrightarrow \mathbf{EXPOSURE} \longrightarrow \mathbf{VULN
 
 ## 2. Live Persistent Prototype URL
 
-* **Live HTTPS Prototype URL:** [https://walter-amended-hamburg-countries.trycloudflare.com](https://walter-amended-hamburg-countries.trycloudflare.com)
-* **Local Preview Server:** `http://localhost:4173/` (or `npm run dev` on `http://localhost:5173/`)
+* **Live HTTPS Prototype URL:** https://hazardiq-web.vercel.app/
 
-> *All client-side routes support direct refresh without 404 errors via SPA rewrites.*
 
 ---
 
