@@ -403,6 +403,7 @@ export const StaticChennaiMap: React.FC<StaticChennaiMapProps> = ({
   const [showRoutes, setShowRoutes] = useState(true);
   const [showShelters, setShowShelters] = useState(true);
   const [showHospitals, setShowHospitals] = useState(true);
+  const [showTacticalOverlays, setShowTacticalOverlays] = useState(true);
 
   const activeFilter = externalFilter || internalFilter;
   const setFilter = (f: HazardFilterType) => {
@@ -520,6 +521,18 @@ export const StaticChennaiMap: React.FC<StaticChennaiMapProps> = ({
         {/* Visibility Toggles */}
         <div className="flex items-center gap-2 text-xs">
           <button
+            onClick={() => setShowTacticalOverlays(!showTacticalOverlays)}
+            className={`px-2.5 py-1 rounded text-[11px] font-bold border transition-colors flex items-center gap-1 ${
+              showTacticalOverlays
+                ? 'bg-red-600 text-white border-red-500 shadow-xs'
+                : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+            }`}
+            title="Toggle between Reference Base Map and Tactical GIS Hazard Layers"
+          >
+            <Eye className="h-3 w-3" />
+            <span>{showTacticalOverlays ? (language === 'ta' ? 'இடர் அடுக்குகள்: ஆன்' : 'Hazard Layers: ON') : (language === 'ta' ? 'அடிப்படை வரைபடம் மட்டும்' : 'Base Map Only')}</span>
+          </button>
+          <button
             onClick={() => setShowRoutes(!showRoutes)}
             className={`px-2 py-0.5 rounded text-[11px] font-bold border transition-colors ${
               showRoutes ? 'bg-red-950/60 text-red-300 border-red-700' : 'bg-slate-800 text-slate-500 border-slate-700'
@@ -550,7 +563,7 @@ export const StaticChennaiMap: React.FC<StaticChennaiMapProps> = ({
       <div className="relative w-full overflow-hidden bg-slate-950 flex items-center justify-center p-1 sm:p-2">
         <div
           className="relative w-full max-w-[720px] mx-auto shadow-2xl rounded-xl overflow-hidden border border-slate-800"
-          style={{ aspectRatio: '587 / 670' }}
+          style={{ aspectRatio: '897 / 1024' }}
         >
           {/* Base Geographic Static Map Image (Prompt Section 5 & 21) */}
           <img
@@ -560,10 +573,18 @@ export const StaticChennaiMap: React.FC<StaticChennaiMapProps> = ({
             style={{ filter: 'contrast(1.05) brightness(0.98)' }}
           />
 
-          {/* HAZARDIQ Decision Support SVG Vector Overlay System (Prompt Section 22: viewBox 0 0 587 670) */}
+          {/* Reference Map Visual Indicator */}
+          {!showTacticalOverlays && (
+            <div className="absolute top-3 left-3 z-20 bg-slate-900/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-slate-700 text-xs text-white font-bold flex items-center gap-1.5 shadow-lg">
+              <span className="h-2 w-2 rounded-full bg-emerald-400"></span>
+              <span>{language === 'ta' ? 'சென்னை அதிகாரப்பூர்வ குறிப்பு வரைபடம் (நேரலை)' : 'Chennai Official Reference Map'}</span>
+            </div>
+          )}
+
+          {/* HAZARDIQ Decision Support SVG Vector Overlay System */}
           <svg
             viewBox="0 0 587 670"
-            className="absolute inset-0 w-full h-full z-10 overflow-visible"
+            className={`absolute inset-0 w-full h-full z-10 overflow-visible ${showTacticalOverlays ? "opacity-100" : "opacity-0 pointer-events-none"}`}
             preserveAspectRatio="xMidYMid meet"
           >
             <defs>
@@ -816,7 +837,7 @@ export const StaticChennaiMap: React.FC<StaticChennaiMapProps> = ({
 
           {/* Watermark & Tactical Coordinates Banner */}
           <div className="absolute bottom-2 left-2 z-20 pointer-events-none bg-slate-950/85 backdrop-blur-sm px-2.5 py-1 rounded-md border border-slate-800 text-[10px] font-mono text-slate-400">
-            <span className="text-red-500 font-black">HAZARDIQ</span> CHENNAI GIS BASE • 13.0827° N, 80.2707° E
+            HAZARD<span className="text-red-500">IQ</span> CHENNAI GIS REFERENCE • 13.0827° N, 80.2707° E
           </div>
         </div>
       </div>

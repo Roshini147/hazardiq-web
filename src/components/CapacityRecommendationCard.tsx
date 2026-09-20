@@ -40,7 +40,7 @@ export const CapacityRecommendationCard: React.FC<CapacityRecommendationCardProp
             </span>
             <div>
               <span className="text-xs font-mono font-bold text-emerald-700 uppercase tracking-wider block">
-                HAZARDIQ RECOMMENDATION
+                HAZARD<span className="text-red-600">IQ</span> RECOMMENDATION
               </span>
               <h4 className="text-sm font-black text-slate-900">
                 Alternative Safe Area Identified

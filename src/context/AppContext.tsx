@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { storage } from '../utils/storage';
+import { storage, CitizenProfile } from '../utils/storage';
 import { TRANSLATIONS, Language } from '../i18n/translations';
 import { RiskZone } from '../data/hazards';
 import { SafeArea } from '../data/shelters';
@@ -27,10 +27,20 @@ interface AppContextType {
   updateReportStatus: (reportId: string, status: CitizenReport['status']) => void;
   sendEmergencyAlert: (data: Omit<EmergencyAlert, 'id' | 'alertCode' | 'issuedAt' | 'active'>) => EmergencyAlert;
   
+  // Citizen Auth
+  citizen: CitizenProfile | null;
+  isCitizenAuthenticated: boolean;
+  citizenLogin: (profile: CitizenProfile) => void;
+  citizenLogout: () => void;
+
+  // Admin Auth
   isAuthenticated: boolean;
+  isAdminAuthenticated: boolean;
   login: (user: string, pass: string) => boolean;
+  adminLogin: (user: string, pass: string) => boolean;
   quickLogin: () => void;
   logout: () => void;
+  adminLogout: () => void;
   
   selectedZone: RiskZone | null;
   setSelectedZone: (zone: RiskZone | null) => void;
@@ -46,7 +56,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [reports, setReports] = useState<CitizenReport[]>(storage.getReports());
   const [alerts, setAlerts] = useState<EmergencyAlert[]>(storage.getAlerts());
   const [isEscalated, setIsEscalated] = useState<boolean>(storage.isEscalated());
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(storage.isAuthenticated());
+  const [citizen, setCitizen] = useState<CitizenProfile | null>(() => storage.getCitizen());
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => storage.isAdminAuthenticated());
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => storage.isAdminAuthenticated());
   const [selectedZone, setSelectedZone] = useState<RiskZone | null>(zones[0] || null);
 
   const t = TRANSLATIONS[language];
@@ -100,7 +112,40 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return newAlt;
   };
 
+
+  const isCitizenAuthenticated = citizen !== null;
+
+  const citizenLogin = (profile: CitizenProfile) => {
+    storage.citizenLogin(profile);
+    setCitizen(profile);
+  };
+
+  const citizenLogout = () => {
+    storage.citizenLogout();
+    setCitizen(null);
+  };
+
+  const adminLogin = (user: string, pass: string) => {
+    const success = storage.adminLogin(user, pass);
+    if (success) {
+      setIsAdminAuthenticated(true);
+      setIsAuthenticated(true);
+    }
+    return success;
+  };
+
+  const adminLogout = () => {
+    storage.adminLogout();
+    setIsAdminAuthenticated(false);
+    setIsAuthenticated(false);
+  };
+
   const login = (user: string, pass: string) => {
+    const success = adminLogin(user, pass);
+    return success;
+  };
+
+  const _oldLogin = (user: string, pass: string) => {
     const u = user.trim().toLowerCase();
     const p = pass.trim();
     // Accept standard official credentials and demo variants
@@ -145,6 +190,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   return (
     <AppContext.Provider
       value={{
+        citizen,
+        isCitizenAuthenticated,
+        citizenLogin,
+        citizenLogout,
+        isAdminAuthenticated,
+        adminLogin,
+        adminLogout,
         language,
         setLanguage,
         toggleLanguage,

@@ -350,7 +350,7 @@ export const CitizenAlertsPage: React.FC = () => {
               to="/"
               className="flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-300"
             >
-              <span>HAZARDIQ</span>
+              <span>HAZARD<span className="text-red-600">IQ</span></span>
             </Link>
 
             <Link

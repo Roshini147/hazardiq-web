@@ -17,6 +17,7 @@ import {
   Compass,
   Activity,
   CheckCircle2,
+  Lock,
 } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
@@ -38,7 +39,7 @@ export const HomePage: React.FC = () => {
   return (
     <div className="space-y-12 pb-16">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white pt-12 pb-16 px-4 border-b border-slate-800">
+      <section className="relative bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white pt-12 pb-16 px-4 border-b border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
         <div className="max-w-7xl mx-auto">
           {/* Top Authority Pill */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold mb-6">
@@ -56,7 +57,9 @@ export const HomePage: React.FC = () => {
                 {t.heroTitle}
               </h1>
               <p className="text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
-                {t.heroDescription}
+                {language === 'ta'
+                  ? 'சென்னையில் பேரிடர் அபாயங்களை உடனுக்குடன் கண்டறிந்து, பாதிக்கப்படக்கூடிய குடியிருப்புகளை அடையாளம் கண்டு, நிவாரண முகாம்களின் தாங்கும் திறனைக் கணித்து, உடனடி அவசர எச்சரிக்கைகளை வழங்க HAZARDIQ உதவுகிறது.'
+                  : 'HAZARDIQ provides real-time multi-hazard intelligence, identifies vulnerable habitations, calculates safe-area carrying capacity, prioritizes evacuation, and coordinates emergency alerts for the Greater Chennai Metropolitan Area.'}
               </p>
 
               {/* Central Product Message Box */}
@@ -217,14 +220,14 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Decision Workflow Chain (Prompt Section 6: HAZARD → EXPOSURE → VULNERABILITY → CAPACITY → RELOCATION) */}
+      {/* Decision Workflow Chain */}
       <section className="max-w-7xl mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-8">
           <h2 className="text-xs font-mono font-bold text-red-600 uppercase tracking-widest mb-1">
             {language === 'ta' ? 'முழுமையான பேரிடர் முடிவெடுக்கும் பணிப்பாய்வு' : 'End-to-End Decision Support'}
           </h2>
           <p className="text-2xl font-bold text-slate-900">
-            {language === 'ta' ? 'HAZARDIQ பேரிடர் மேலாண்மை கட்டமைப்பு' : 'The Complete Disaster Management Pipeline'}
+            HAZARD<span className="text-red-600">IQ</span> {language === 'ta' ? 'பேரிடர் மேலாண்மை கட்டமைப்பு' : 'Disaster Management Pipeline'}
           </p>
         </div>
 
@@ -247,7 +250,7 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Feature Cards */}
+      {/* Feature Pillars */}
       <section className="max-w-7xl mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Card 1 */}
@@ -342,7 +345,7 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Citizen Call-to-Action Strip */}
+      {/* Citizen Call-to-Action Incident Reporting Strip */}
       <section className="max-w-7xl mx-auto px-4">
         <div className="rounded-2xl bg-gradient-to-r from-red-600 to-red-800 p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-2">
@@ -366,6 +369,43 @@ export const HomePage: React.FC = () => {
           </Link>
         </div>
       </section>
+
+      {/* SECTION 8 MANDATORY REQUIREMENT: Dedicated Bottom "Open Admin Console" Gateway */}
+      <section className="max-w-7xl mx-auto px-4">
+        <div className="rounded-2xl bg-slate-900 border border-slate-800 p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-start gap-4">
+            <div className="h-12 w-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-emerald-400 flex-shrink-0 shadow-md">
+              <Lock className="h-6 w-6" />
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800/80 font-bold">
+                  {language === 'ta' ? 'அரசு அதிகாரப்பூர்வ நுழைவு வாயில்' : 'GOVERNMENT AUTHORITY GATEWAY'}
+                </span>
+                <span className="text-slate-500">•</span>
+                <span className="text-[11px] text-slate-400">GCC & TNSDMA Command</span>
+              </div>
+              <h3 className="text-xl font-black text-white">
+                {language === 'ta' ? 'அரசு பேரிடர் கட்டுப்பாட்டு முனையம்' : 'Government Disaster Authority Console'}
+              </h3>
+              <p className="text-xs text-slate-400 max-w-2xl leading-relaxed">
+                {t.adminGatewayDesc}
+              </p>
+            </div>
+          </div>
+
+          <Link
+            to="/admin/login"
+            className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-950 transition-all transform hover:-translate-y-0.5"
+          >
+            <Lock className="h-4 w-4" />
+            <span>{t.openAdminConsole}</span>
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
     </div>
   );
 };
+
+export default HomePage;

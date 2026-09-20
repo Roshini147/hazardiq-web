@@ -233,9 +233,12 @@ export const AdminDashboardPage: React.FC = () => {
                 <span>{language === 'ta' ? 'நேரலை செயல்பாட்டு நிலை' : 'OPERATIONAL STATE'}</span>
               </span>
             </div>
-            <h1 className="text-xl md:text-2xl font-black text-white">
-              {language === 'ta' ? 'HAZARDIQ — அரசு பேரிடர் மேலாண்மை கட்டுப்பாட்டு தளம்' : 'HAZARDIQ — Government Disaster Management Console'}
-            </h1>
+            <div className="flex items-center gap-3">
+              <img src="/assets/logo.png" alt="HAZARDIQ Official Logo" className="h-10 w-10 object-contain drop-shadow-md" />
+              <h1 className="text-xl md:text-2xl font-black text-white font-sans">
+                HAZARD<span className="text-red-500">IQ</span> — {language === 'ta' ? 'அரசு பேரிடர் மேலாண்மை முனையம்' : 'Government Disaster Management Console'}
+              </h1>
+            </div>
             <p className="text-xs text-slate-400">
               {language === 'ta'
                 ? 'தமிழ்நாடு மாநில பேரிடர் மேலாண்மை ஆணையம் & பெருநகர சென்னை மாநகராட்சி ஒருங்கிணைந்த கட்டளை மையம்'

@@ -6,6 +6,16 @@ import { maskPhoneNumber } from '../data/recipients';
 
 import { OFFICIAL_PROTOTYPE_RECIPIENTS, AlertRecipient } from '../data/recipients';
 
+export interface CitizenProfile {
+  name: string;
+  gender: string;
+  age: number;
+  place: string;
+  zone: string;
+  phone: string;
+  loginAt: string;
+}
+
 export interface NotepadLogEntry {
   id: string;
   type?: 'ALERT_DISPATCH' | 'REGISTRATION';
@@ -35,6 +45,8 @@ const STORAGE_KEYS = {
   LANG: 'hazardiq_lang_v1',
   LOW_BW: 'hazardiq_low_bw_v1',
   AUTH: 'hazardiq_auth_session_v1',
+  CITIZEN: 'hazardiq_citizen_profile_v1',
+  ADMIN_AUTH: 'hazardiq_admin_auth_v1',
   NOTEPAD_LOG: 'hazardiq_notepad_log_v1',
   RECIPIENTS: 'hazardiq_recipients_v1',
 };
@@ -546,6 +558,60 @@ export const storage = {
       return z;
     });
     localStorage.setItem(STORAGE_KEYS.ZONES, JSON.stringify(updated));
+  },
+
+
+  // Citizen Auth & Profile
+  getCitizen(): CitizenProfile | null {
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.CITIZEN);
+      return data ? JSON.parse(data) : null;
+    } catch {
+      return null;
+    }
+  },
+
+  isCitizenAuthenticated(): boolean {
+    return this.getCitizen() !== null;
+  },
+
+  citizenLogin(profile: CitizenProfile): void {
+    try {
+      localStorage.setItem(STORAGE_KEYS.CITIZEN, JSON.stringify(profile));
+      // Auto-register citizen phone in emergency recipient directory
+      this.registerRecipient(profile.name, profile.phone, profile.zone, 'Resident Citizen Subscriber');
+    } catch (e) {
+      console.error('Failed to store citizen profile', e);
+    }
+  },
+
+  citizenLogout(): void {
+    localStorage.removeItem(STORAGE_KEYS.CITIZEN);
+  },
+
+  // Government Admin Auth
+  isAdminAuthenticated(): boolean {
+    return localStorage.getItem(STORAGE_KEYS.ADMIN_AUTH) === 'true';
+  },
+
+  adminLogin(user: string, pass: string): boolean {
+    const u = (user || '').trim().toLowerCase();
+    const p = (pass || '').trim();
+    if (
+      (u === 'admin' && (p === 'hazardiq' || p === 'admin' || p === 'admin123' || p === 'password')) ||
+      (u === 'officer' && (p === 'hazardiq' || p === 'officer' || p === 'admin123')) ||
+      (u === 'admin@tnsdma.gov.in' && (p === 'hazardiq' || p === 'admin' || p === 'admin123'))
+    ) {
+      localStorage.setItem(STORAGE_KEYS.ADMIN_AUTH, 'true');
+      localStorage.setItem(STORAGE_KEYS.AUTH, 'true');
+      return true;
+    }
+    return false;
+  },
+
+  adminLogout(): void {
+    localStorage.removeItem(STORAGE_KEYS.ADMIN_AUTH);
+    localStorage.removeItem(STORAGE_KEYS.AUTH);
   },
 
   // Auth
